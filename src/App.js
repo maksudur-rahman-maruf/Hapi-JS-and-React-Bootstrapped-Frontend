@@ -7,6 +7,8 @@ import { Button, Table, Form } from 'react-bootstrap';
 function App() {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
+  const [newPersonFirstName, setNewPersonFirstName] = useState("");
+  const [newPersonLastName, setNewPersonLastName] = useState("");
 
   const [employeeList, setEmployeeList] = useState([]);
 
@@ -21,6 +23,17 @@ function App() {
       firstname: firstname,
       lastname: lastname
     });
+  };
+
+  const updatePerson = (id) => {
+    Axios.put(`http://localhost:3001/person/${id}`, {
+      firstname: newPersonFirstName,
+      lastname: newPersonLastName
+    });
+  };
+
+  const deletePerson = (id) => {
+    Axios.delete(`http://localhost:3001/person/${id}`);
   };
 
 
@@ -55,6 +68,9 @@ function App() {
             <tr>
               <th>First Name</th>
               <th>Last Name</th>
+              <th>Delete Button</th>
+              <th>Update Form</th>
+              <th>Update Button</th>
             </tr>
           </thead>
           <tbody>
@@ -63,6 +79,23 @@ function App() {
                 <tr key={key}>
                   <td> {val.firstname} </td>
                   <td> {val.lastname}</td>
+                  <td> <button onClick={() => deletePerson(val._id)}> Delete </button> </td>
+                  <td> <input
+                    type="text"
+                    placeholder="First Name..."
+                    value={val.firstname}
+                    onChange={(event) => {
+                      setNewPersonFirstName(event.target.value);
+                    }}
+                  />  <input
+                      type="text"
+                      placeholder="Last Name..."
+                      value={val.lastname}
+                      onChange={(event) => {
+                        setNewPersonLastName(event.target.value);
+                      }}
+                    /> </td>
+                    <td> <button onClick={() => updatePerson(val._id)}> Update </button> </td>
                 </tr>
               );
             })}
